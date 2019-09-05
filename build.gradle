@@ -12,6 +12,7 @@ buildscript {
 }
 
 apply plugin: 'kotlin'
+apply plugin: 'application'
 
 repositories {
     mavenCentral()
@@ -20,6 +21,7 @@ repositories {
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     compile group: 'net.sourceforge.htmlcleaner', name: 'htmlcleaner', version: '2.21'
+    compile group: 'com.sun.mail', name: 'javax.mail', version: '1.6.2'
 }
 
 compileKotlin {
@@ -27,4 +29,9 @@ compileKotlin {
 }
 compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
+}
+mainClassName = 'p8499.stock.MainKt'
+jar {
+    manifest.attributes 'Main-Class': 'p8499.stock.MainKt'
+    from configurations.compile.collect { zipTree it }
 }

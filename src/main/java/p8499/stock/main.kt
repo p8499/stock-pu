@@ -4,6 +4,11 @@ import org.htmlcleaner.HtmlCleaner
 import org.htmlcleaner.TagNode
 import java.io.File
 import java.net.URL
+import java.util.*
+import javax.mail.Message
+import javax.mail.Session
+import javax.mail.internet.InternetAddress
+import javax.mail.internet.MimeMessage
 
 
 fun main(args: Array<String>) {
@@ -28,6 +33,9 @@ fun main(args: Array<String>) {
         if (exists()) delete()
         createNewFile()
         find(map, 2).forEach { appendText("$it\n") }
+    }
+    File("""C:\sc\mail.txt""").readLines().forEach {
+        send(it, "更新${map.size}条证券评级", "")
     }
 }
 
@@ -71,6 +79,30 @@ fun build(): Map<String, Rating> {
         page = if (trList.isNotEmpty()) page + 1 else 0
     }
     return map
+}
+
+fun send(to_addr: String, subject: String, content: String) {
+    val prop = Properties().apply {
+        setProperty("mail.transport.protocol", "smtp")
+        setProperty("mail.host", smtp_server)
+        setProperty("mail.smtp.port", smtp_port.toString())
+        setProperty("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+        setProperty("mail.smtp.socketFactory.fallback", "false");
+        setProperty("mail.smtp.socketFactory.port", smtp_port.toString());
+        setProperty("mail.smtp.auth", "true")
+    }
+    val session = Session.getInstance(prop)
+    val message = MimeMessage(session).apply {
+        setFrom(InternetAddress(from_addr))
+        setRecipient(Message.RecipientType.TO, InternetAddress(to_addr))
+        setSubject(subject)
+        setContent(content, "text/html;charset=UTF-8")
+    }
+    session.transport.let {
+        it.connect(smtp_server, smtp_port, from_addr, password)
+        it.sendMessage(message, message.allRecipients)
+        it.close()
+    }
 }
 
 class Rating(var buy: Int = 0, var overweight: Int = 0, var neutral: Int = 0, var underweight: Int = 0, var sell: Int = 0) {

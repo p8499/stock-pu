@@ -5,3 +5,4 @@ gradle
 gradlew
 gradlew.bat
 settings.gradle
+src/main/java/p8499/stock/credential.kt
