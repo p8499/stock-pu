@@ -86,9 +86,9 @@ fun send(to_addr: String, subject: String, content: String) {
         setProperty("mail.transport.protocol", "smtp")
         setProperty("mail.host", smtp_server)
         setProperty("mail.smtp.port", smtp_port.toString())
-        setProperty("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-        setProperty("mail.smtp.socketFactory.fallback", "false");
-        setProperty("mail.smtp.socketFactory.port", smtp_port.toString());
+        setProperty("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory")
+        setProperty("mail.smtp.socketFactory.fallback", "false")
+        setProperty("mail.smtp.socketFactory.port", smtp_port.toString())
         setProperty("mail.smtp.auth", "true")
     }
     val session = Session.getInstance(prop)
